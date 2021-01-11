@@ -11,3 +11,7 @@ I am using Docker and Docker Compose to encapsulate all the aspects of this appl
 ## Outcome
 
 Ultimately I would like to build a user interface that any community library would envy. The Nuxt.js SPA is intended to be an interface for end-users. I will be sticking to using the auto-generated Django admin site as the interface intended for Library staff. Although I may try to spruce it up a bit with some Vue.
+
+## Motivation
+
+The MDN tutorial broadened my understanding of application development in Django beyond what I had gathered through other sources. After working through it, I finally felt confident enough in my understanding of the framework to use it professionally. I have a ridiculous amount of fun developing with the Django framework and I'm always looking for ways to enhance my skillset.

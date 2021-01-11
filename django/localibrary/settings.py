@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'catalog.apps.CatalogConfig',
     'api.apps.ApiConfig',
+    'myauth.apps.MyauthConfig',
     'rest_framework',
     'django_filters',
 ]
@@ -73,6 +74,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'localibrary.wsgi.application'
 
+AUTH_USER_MODEL = 'myauth.User'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -80,7 +82,7 @@ WSGI_APPLICATION = 'localibrary.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
+        'NAME': 'locallibrary',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': 'db',
