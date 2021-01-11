@@ -1,0 +1,40 @@
+#
+# docker-compose.yml
+# Define services for an SPA version of the Local Library application
+# that is created working through the MDN Django tutorial
+# https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django
+#
+
+version: '3'
+
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - pg-data:/var/lib/postgresql/data  # Defining an external data volume so we don't lose data when containers shut donw
+
+  # Define back-end server process
+  django:
+    restart: on-failure
+    build: ./django
+    command: ./manage.py runserver 0.0.0.0:9000
+    volumes:
+      - ./django:/code
+    ports:
+     - "9000:9000"
+    depends_on:
+      - db
+  
+  # Nuxt.js front-end 
+  frontend_server:
+    build: ./frontend_server # <-- This will be a multistage build
+    ports: 
+      - "8000:80"
+
+volumes:
+  pg-data: {}
