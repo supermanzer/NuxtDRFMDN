@@ -15,3 +15,13 @@ Ultimately I would like to build a user interface that any community library wou
 ## Motivation
 
 The MDN tutorial broadened my understanding of application development in Django beyond what I had gathered through other sources. After working through it, I finally felt confident enough in my understanding of the framework to use it professionally. I have a ridiculous amount of fun developing with the Django framework and I'm always looking for ways to enhance my skillset.
+
+## My Steps
+
+In case anyone stumbles across this repo and thinks it would make a fun project to attempt, here are the steps I've taken.
+
+1. Implement complete app structure in `docker-compose.yml` and write the necessary `Dockerfile`s
+2. Work through the MDN Django tutorial as written for parts 1 - 4. Well I did change the database approach as well as working within Docker containers but that is easily copied from the aforementioned files.
+3. Create an app for handling the REST API: `./manage.py createapp api`. This is mainly just used to namespace the API URLs so far but I like to take this approach.
+4. Create `api_views.py` and `serializers.py` in the Catalog app. I take this approach so that all logic that pertains to that app and its models are contained there. If I wind up using that app (or any other similarly design app) in another project I don't have to track down where the DRF Viewsets or Seriliazers are defined. If the new app isn't employing a REST API, these files don't hurt anything.
+5. Starting with the [MDN Django tutorial part 5](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Home_page), any work regarding building a non-admin interface will be done using the Nuxt.js front-end. This is where things start to get new and interesting (for me).

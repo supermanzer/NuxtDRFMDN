@@ -18,6 +18,7 @@ class BookViewset(viewsets.ModelViewSet):
 class InstanceViewset(viewsets.ModelViewSet):
     queryset = BookInstance.objects.all()
     serializer_class = InstanceSerializer
+    filterset_fields = ['status']
 
 
 class GenreViewset(viewsets.ModelViewSet):

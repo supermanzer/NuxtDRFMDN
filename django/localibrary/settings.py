@@ -42,11 +42,13 @@ INSTALLED_APPS = [
     'myauth.apps.MyauthConfig',
     'rest_framework',
     'django_filters',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -141,3 +143,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
+
+
+# Django CORS Headers SEttings
+# https://pypi.org/project/django-cors-headers/
+
+CORS_ALLOW_ALL_ORIGINS = True

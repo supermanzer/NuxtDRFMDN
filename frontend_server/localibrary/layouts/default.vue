@@ -14,6 +14,7 @@
           :to="item.to"
           router
           exact
+          class="py-4"
         >
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
@@ -54,13 +55,18 @@ export default {
       items: [
         {
           icon: "mdi-apps",
-          title: "Welcome",
+          title: "Home",
           to: "/",
         },
         {
-          icon: "mdi-chart-bubble",
-          title: "Inspire",
-          to: "/inspire",
+          icon: "mdi-book-open-page-variant",
+          title: "Books",
+          to: { name: "books" },
+        },
+        {
+          icon: "mdi-book-edit",
+          title: "Authors",
+          to: { name: "authors" },
         },
       ],
       miniVariant: false,
