@@ -16,6 +16,9 @@ class GenreSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class BookSerializer(serializers.HyperlinkedModelSerializer):
+    genre = serializers.CharField(source='display_genre')
+    author = serializers.CharField(source='author.display_name')
+
     class Meta:
         model = Book
         fields = [

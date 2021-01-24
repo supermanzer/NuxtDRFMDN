@@ -14,7 +14,7 @@
       <v-card-subtitle> Resources </v-card-subtitle>
       <v-card-text>
         <v-row>
-          <v-col cols="12" sm="4" class="rb">
+          <v-col cols="12" sm="3" class="rb">
             <two-lines>
               <template v-slot:title>Authors</template>
               <template v-slot:subtitle>
@@ -23,7 +23,7 @@
               </template>
             </two-lines>
           </v-col>
-          <v-col cols="12" sm="4" class="rb">
+          <v-col cols="12" sm="3" class="rb">
             <two-lines>
               <template v-slot:title>Books</template>
               <template v-slot:subtitle>
@@ -31,7 +31,7 @@
               </template>
             </two-lines>
           </v-col>
-          <v-col cols="12" sm="4">
+          <v-col cols="12" sm="3" class="rb">
             <two-lines>
               <template v-slot:title>Copies</template>
               <template v-slot:subtitle>
@@ -40,7 +40,17 @@
               </template>
             </two-lines>
           </v-col>
-          <v-col cols="12" sm="12">
+          <v-col cols="12" sm="3">
+            <two-lines>
+              <template v-slot:title>Genres</template>
+              <template v-slot:subtitle>
+                We currently have books in {{ num_genres }} Genres
+              </template>
+            </two-lines>
+          </v-col>
+        </v-row>
+        <v-row class="pt-6 mt-6">
+          <v-col cols="12" sm="4" offset-sm="4">
             <two-lines>
               <template v-slot:title>Books Available</template>
               <template v-slot:subtitle>
@@ -92,6 +102,7 @@ export default {
     num_instances: (state) => state.library.instances.count,
     num_instances_available: (state) => state.library.available.count,
     num_authors: (state) => state.library.authors.count,
+    num_genres: (state) => state.library.genres.count,
   }),
 };
 </script>

@@ -8,21 +8,12 @@
       app
     >
       <v-list>
-        <v-list-item
+        <nav-list-item
           v-for="(item, i) in items"
           :key="i"
-          :to="item.to"
-          router
-          exact
-          class="py-4"
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
+          :item="item"
+          :i="i"
+        ></nav-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app>
@@ -46,7 +37,9 @@
 </template>
 
 <script>
+import navListItem from "~/components/lists/navListItem.vue";
 export default {
+  components: { navListItem },
   data() {
     return {
       clipped: true,

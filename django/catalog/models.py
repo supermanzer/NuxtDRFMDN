@@ -80,3 +80,6 @@ class Author(models.Model):
 
     def __str__(self) -> str:
         return f'{self.last_name}, {self.first_name}'
+
+    def display_name(self) -> str:
+        return str(self)
