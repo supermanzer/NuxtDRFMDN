@@ -13,6 +13,7 @@
           :key="i"
           :item="item"
           :i="i"
+          :mini="miniVariant"
         ></nav-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -47,7 +48,7 @@ export default {
       fixed: false,
       items: [
         {
-          icon: "mdi-apps",
+          icon: "mdi-home",
           title: "Home",
           to: "/",
         },

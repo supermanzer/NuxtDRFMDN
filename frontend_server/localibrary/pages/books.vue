@@ -10,9 +10,9 @@
     <ext-data-table
       :headers="headers"
       :records="books.results"
-      :page="page"
       :pageCount="pageCount"
-      :sync="options"
+      @table-change="sortTable"
+      @page-change="changePage"
     >
     </ext-data-table>
     <!-- <v-data-table
@@ -40,8 +40,17 @@ export default {
     },
   },
   methods: {
+    fetchBooks(modifiers = {}) {
+      this.$store.dispatch("library/fetchData", { type: "books", modifiers });
+    },
     refreshBooks() {
-      this.$store.dispatch("library/fetchData", "books");
+      this.fetchBooks();
+    },
+    sortTable(options) {
+      this.fetchBooks(options);
+    },
+    changePage(page) {
+      this.fetchBooks({ page });
     },
   },
   created() {
@@ -55,7 +64,6 @@ export default {
         { text: "Author", value: "author" },
         { text: "Genre", value: "genre" },
       ],
-      page: 1,
       options: {},
     };
   },

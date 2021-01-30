@@ -5,11 +5,12 @@
       :headers="headers"
       hide-default-footer
       class="eleveation-1"
-      :page.sync="page"
+      :options.sync="options"
       :items-per-page="itemsPerPage"
+      :page.sync="options.page"
     >
     </v-data-table>
-    <v-pagination v-model="page" :length="pageCount"> </v-pagination>
+    <v-pagination v-model="options.page" :length="pageCount"> </v-pagination>
   </div>
 </template>
 
@@ -19,7 +20,6 @@ export default {
   props: {
     headers: { type: Array, required: true },
     records: { type: Array, required: true },
-    page: { type: Number, required: true },
     pageCount: { type: Number, required: true },
   },
   computed: {
@@ -29,8 +29,24 @@ export default {
   },
   data() {
     return {
-      loading: true,
+      page: 1,
+      options: {},
     };
+  },
+  watch: {
+    options: {
+      handler() {
+        // console.log(this.options);
+        this.$emit("table-change", this.options);
+      },
+      deep: true,
+    },
+    page: {
+      handler() {
+        this.$emit("page-change", this.options);
+      },
+      deep: true,
+    },
   },
 };
 </script>

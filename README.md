@@ -34,3 +34,4 @@ These are the areas of building a fully featured app I would like to address, be
 - Design workflow for partons to register with the local library
 - Design a notification system based on due dates for patrons who have reserved books that are due back
 - Deploy my custom approach to using Django templates with AJAX requests using Vue and Axios
+- Implement Nuxt composition API refactoring for pages

@@ -24,6 +24,9 @@ class Book(models.Model):
     genre = models.ManyToManyField(
         Genre, help_text='Select a genre for this book')
 
+    class Meta:
+        ordering = ['title']
+
     def __str__(self) -> str:
         return self.title
 

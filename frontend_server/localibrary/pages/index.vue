@@ -27,7 +27,7 @@
             <two-lines>
               <template v-slot:title>Books</template>
               <template v-slot:subtitle>
-                We currently {{ num_books }} books
+                We currently have {{ num_books }} books
               </template>
             </two-lines>
           </v-col>
@@ -89,7 +89,10 @@ export default {
   methods: {
     loadData() {
       this.models.forEach((model) =>
-        this.$store.dispatch("library/fetchData", model)
+        this.$store.dispatch("library/fetchData", {
+          type: model,
+          modifiers: {},
+        })
       );
     },
   },

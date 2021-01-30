@@ -3,6 +3,7 @@
  * Definig a namespaced store module for data from the library API
  */
 
+// CONSTANTS
 const rootUrls = {
   authors: "authors/",
   books: "books/",
@@ -10,6 +11,35 @@ const rootUrls = {
   genres: "genres/"
 };
 
+// UTILITY FUNCTIONS
+/**
+ * Function to alter base URL - performs server side sorting, searching, pagination
+ * @param {String} url base URL to be modified
+ * @param {Object} modifiers Modifiers (sortBy, page, etc)
+ */
+const apiUrl = (url, modifiers) => {
+  url = url.indexOf("?") === -1 ? url + "?" : url;
+  for (const [key, value] of Object.entries(modifiers)) {
+    url = `${url}${key}=${value}&`;
+  }
+  return url.slice(0, -1);
+};
+
+/**
+ * Translate Vuetify options object into keys: values that match API requirements
+ * @param {Object} modifiers The options object returned by paginated/sorted table
+ */
+const apiObject = ({ sortBy, sortDesc, page }) => {
+  var result = {};
+  if (sortBy.length === 1 && sortDesc.length === 1) {
+    result.ordering = sortDesc[0] ? `-${sortBy[0]}` : sortBy[0];
+  }
+  result.page = page;
+  // console.log(result);
+  return result;
+};
+
+// STORE OBJECTS
 const state = () => ({
   authors: [],
   books: [],
@@ -31,9 +61,18 @@ const actions = {
    * Generic API data fetching
    * @param {String} type The type of records to fetch
    */
-  async fetchData({ commit }, type) {
+  async fetchData({ commit }, { type, modifiers }) {
+    var urlObj = {};
     if (rootUrls.hasOwnProperty(type)) {
-      let data = await this.$axios.$get(rootUrls[type]);
+      if (
+        modifiers.hasOwnProperty("sortBy") ||
+        modifiers.hasOwnProperty("page")
+      ) {
+        urlObj = apiObject(modifiers);
+      }
+      // const url = apiUrl(rootUrls[type], modifiers);
+      // console.log(url);
+      let data = await this.$axios.$get(rootUrls[type], { params: urlObj });
       commit("SET_DATA", { type, data });
     }
   },
