@@ -5,39 +5,60 @@ from .models import Author, Genre, BookInstance, Book
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Author
-        fields = ['url', 'last_name', 'first_name',
+        fields = ['id', 'url', 'last_name', 'first_name',
                   'date_of_birth', 'date_of_death']
 
 
 class GenreSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Genre
-        fields = ['url', 'name']
+        fields = ['id', 'url', 'name']
 
 
-class BookSerializer(serializers.HyperlinkedModelSerializer):
+class InstanceSerializer(serializers.ModelSerializer):
+    inst_status = serializers.CharField(source='get_status_display')
+
+    class Meta:
+        model = BookInstance
+        fields = [
+            'id',
+            'url',
+            'book',
+            'imprint',
+            'status',
+            'inst_status',
+            'due_date'
+        ]
+
+
+class BookListSerializer(serializers.ModelSerializer):
     genre = serializers.CharField(source='display_genre')
     author = serializers.CharField(source='author.display_name')
 
     class Meta:
         model = Book
         fields = [
-            'url',
+            'id',
             'title',
             'author',
-            'summary',
-            'isbn',
             'genre'
         ]
 
 
-class InstanceSerializer(serializers.HyperlinkedModelSerializer):
+class BookDetailSerializer(serializers.ModelSerializer):
+    genre = serializers.CharField(source='display_genre')
+    author = AuthorSerializer(many=False, read_only=True)
+    instances = InstanceSerializer(many=True, read_only=True)
+
     class Meta:
-        model = BookInstance
-        fields = [
-            'url',
-            'book',
-            'imprint',
-            'status',
-            'due_date'
-        ]
+        model = Book
+        fields = (
+            'id',
+            'title',
+            'genre',
+            'author',
+            'summary',
+            'isbn',
+            'image',
+            'instances'
+        )

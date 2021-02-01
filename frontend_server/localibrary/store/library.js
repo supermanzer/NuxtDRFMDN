@@ -86,6 +86,12 @@ const actions = {
     let data = await this.$axios.$get(url);
     let type = "available";
     commit("SET_DATA", { type, data });
+  },
+
+  async fetchDetail({ commit }, { type, id }) {
+    let url = `${rootUrls[type]}${id}`;
+    let data = await this.$axios.$get(url);
+    return data;
   }
 };
 

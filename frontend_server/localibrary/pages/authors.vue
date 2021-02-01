@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <h2>These are Authors</h2>
-  </div>
+  <nuxt-child></nuxt-child>
 </template>
 
 <script>
-export default {};
+export default {
+  name: "AuthorsPage",
+};
 </script>
 
 <style>

@@ -35,3 +35,6 @@ These are the areas of building a fully featured app I would like to address, be
 - Design a notification system based on due dates for patrons who have reserved books that are due back
 - Deploy my custom approach to using Django templates with AJAX requests using Vue and Axios
 - Implement Nuxt composition API refactoring for pages
+- Customize Nuxt.js error pages
+- Develop a less cookie-cutter style
+- Use the data returned by an OPTIONS request to dynamically build table headers and forms in Nuxt.js

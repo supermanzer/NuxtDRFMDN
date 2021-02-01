@@ -16,13 +16,18 @@ class Genre(models.Model):
 class Book(models.Model):
     """Model representing a book"""
     title = models.CharField(max_length=200)
-    author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey(
+        'Author', on_delete=models.SET_NULL, null=True, related_name='books')
     summary = models.TextField(
         max_length=1000, help_text='Enter a brief description of the book')
     isbn = models.CharField('ISBN', max_length=13,
                             unique=True, help_text='13 character ISBN number')
     genre = models.ManyToManyField(
         Genre, help_text='Select a genre for this book')
+    image = models.URLField(
+        help_text='A URL to an image for this book',
+        null=True, blank=True
+    )
 
     class Meta:
         ordering = ['title']
@@ -55,7 +60,8 @@ class BookInstance(models.Model):
     # FIELDS
     id = models.UUIDField(primary_key=True, default=uuid.uuid4,
                           help_text='Unique ID for particular book')
-    book = models.ForeignKey('Book', on_delete=models.RESTRICT)
+    book = models.ForeignKey(
+        'Book', on_delete=models.RESTRICT, related_name='instances')
     imprint = models.CharField(max_length=200)
     due_date = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=1, choices=LOAN_STATUS,  # <- 1 advantage, no need to re-define values that shoud be constant

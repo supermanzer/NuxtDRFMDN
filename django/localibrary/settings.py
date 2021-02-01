@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'myauth.apps.MyauthConfig',
     'rest_framework',
     'django_filters',
-    'corsheaders'
+    'corsheaders',
 ]
 
 MIDDLEWARE = [

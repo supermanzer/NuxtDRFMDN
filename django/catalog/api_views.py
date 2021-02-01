@@ -1,7 +1,10 @@
 from .models import Genre, BookInstance, Book, Author
 from rest_framework import viewsets, filters
 from django_filters import rest_framework as df_filters
-from .serializers import GenreSerializer, BookSerializer, InstanceSerializer, AuthorSerializer
+from .serializers import (
+    BookDetailSerializer, GenreSerializer, BookListSerializer, InstanceSerializer, AuthorSerializer
+)
+from api.viewset_mixins import ListDetailMixin
 
 
 class AuthorViewset(viewsets.ModelViewSet):
@@ -10,9 +13,10 @@ class AuthorViewset(viewsets.ModelViewSet):
     search_fields = ['last_name', 'first_name']
 
 
-class BookViewset(viewsets.ModelViewSet):
+class BookViewset(ListDetailMixin, viewsets.ModelViewSet):
     queryset = Book.objects.all()
-    serializer_class = BookSerializer
+    list_serializer = BookListSerializer
+    detail_serializer = BookDetailSerializer
     search_fields = ['title']
     ordering_fields = ['title', 'author', 'genre']
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
