@@ -4,7 +4,7 @@
       :items="records"
       :headers="headers"
       hide-default-footer
-      class="eleveation-1"
+      class="elevation-1"
       :options.sync="options"
       :items-per-page="itemsPerPage"
       :page.sync="options.page"
@@ -13,14 +13,17 @@
         <slot name="table-top"></slot>
       </template>
       <!-- Figure out a way to to this from the page using this component with slots! -->
-      <template v-slot:item.title="{ item }">
-        <v-btn
+      <template v-slot:item.actions="{ item }">
+        <slot name="table-actions" v-bind:item="item">
+          <v-icon>mdi-magnify</v-icon>
+        </slot>
+        <!-- <v-btn
           color="primary"
           text
           nuxt
           :to="{ name: 'books-id', params: { id: item.id } }"
           >{{ item.title }}</v-btn
-        >
+        > -->
         <!-- <v-btn
           icon
           text

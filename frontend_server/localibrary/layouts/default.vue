@@ -26,7 +26,7 @@
       <v-toolbar-title v-text="title" />
     </v-app-bar>
     <v-main>
-      <v-container>
+      <v-container class="mx-12">
         <nuxt />
       </v-container>
     </v-main>

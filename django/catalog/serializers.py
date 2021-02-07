@@ -2,13 +2,6 @@ from rest_framework import serializers
 from .models import Author, Genre, BookInstance, Book
 
 
-class AuthorSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Author
-        fields = ['id', 'url', 'last_name', 'first_name',
-                  'date_of_birth', 'date_of_death']
-
-
 class GenreSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Genre
@@ -41,8 +34,30 @@ class BookListSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'author',
-            'genre'
+            'genre',
+            'summary'
         ]
+
+
+class AuthorListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = [
+            'id',
+            'last_name',
+            'first_name',
+            'date_of_birth',
+            'date_of_death'
+        ]
+
+
+class AuthorSerializer(serializers.HyperlinkedModelSerializer):
+    books = BookListSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Author
+        fields = ['id', 'url', 'last_name', 'first_name',
+                  'date_of_birth', 'date_of_death', 'books']
 
 
 class BookDetailSerializer(serializers.ModelSerializer):

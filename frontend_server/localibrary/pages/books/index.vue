@@ -13,14 +13,37 @@
       :records="books.results"
       :pageCount="pageCount"
       @table-change="sortTable"
-      @page-change="changePage"
     >
+      <template slot="table-top">
+        <v-row>
+          <v-col cols="12" sm="5">
+            <p class="text-h4">Search Books</p>
+          </v-col>
+          <v-col cols="12" sm="7">
+            <v-text-field
+              v-model="search"
+              label="Search Term"
+              @keyup="searchBooks"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </template>
+      <template v-slot:table-actions="slotProps">
+        <v-btn
+          color="primary"
+          icon
+          nuxt
+          :to="{ name: 'books-id', params: { id: slotProps.item.id } }"
+        >
+          <v-icon>mdi-details</v-icon>
+        </v-btn>
+      </template>
     </ext-data-table>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import extDataTable from "~/components/tables/extDataTable.vue";
 export default {
   components: { extDataTable },
@@ -28,6 +51,9 @@ export default {
   computed: {
     ...mapState({
       books: (state) => state.library.books,
+    }),
+    ...mapGetters({
+      headers: "library/getTableHeaders",
     }),
     pageCount() {
       return this.books.count / this.books.results.length;
@@ -46,22 +72,23 @@ export default {
     sortTable(options) {
       this.fetchBooks(options);
     },
-    changePage(page) {
-      this.fetchBooks({ page });
+    searchBooks() {
+      this.$store.dispatch("library/searchData", {
+        type: "books",
+        search: this.search,
+      });
     },
   },
   mounted() {
     // I just want to keep things fresh.  You know?
-    this.refreshBooks();
+    if (this.books instanceof Array) {
+      this.refreshBooks();
+      this.$store.dispatch("library/fetchHeaders", { type: "books" });
+    }
   },
   data() {
     return {
-      headers: [
-        { text: "Title", value: "title" },
-        { text: "Author", value: "author" },
-        { text: "Genre", value: "genre" },
-      ],
-      options: {},
+      search: "",
     };
   },
 };
