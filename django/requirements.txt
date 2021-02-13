@@ -6,6 +6,7 @@ Django==3.1.5
 django-cors-headers==3.6.0
 django-filter==2.4.0
 djangorestframework==3.12.2
+djangorestframework-simplejwt==4.6.0
 ipython==7.19.0
 ipython-genutils==0.2.0
 jedi==0.18.0
@@ -17,6 +18,7 @@ psycopg2-binary==2.8.6
 ptyprocess==0.7.0
 pycodestyle==2.6.0
 Pygments==2.7.4
+PyJWT==2.0.1
 pytz==2020.5
 sqlparse==0.4.1
 toml==0.10.2

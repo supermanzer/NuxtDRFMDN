@@ -24,6 +24,13 @@
       </v-btn>
 
       <v-toolbar-title v-text="title" />
+      <v-spacer></v-spacer>
+      <div v-if="loggedIn">
+        <span>Hi {{ user.first_name }}</span>
+      </div>
+      <div v-else>
+        <v-btn nuxt :to="{ name: 'login' }">Log In</v-btn>
+      </div>
     </v-app-bar>
     <v-main>
       <v-container class="mx-12">
@@ -38,6 +45,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import navListItem from "~/components/lists/navListItem.vue";
 export default {
   components: { navListItem },
@@ -69,5 +77,9 @@ export default {
       title: "Local Library",
     };
   },
+  computed: mapState({
+    loggedIn: (state) => state.auth.loggedIn,
+    user: (state) => state.auth.user,
+  }),
 };
 </script>

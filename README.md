@@ -42,5 +42,25 @@ These are the areas of building a fully featured app I would like to address, be
 - Customize Nuxt.js error pages
 - Develop a less cookie-cutter style
 - Use the data returned by an OPTIONS request to dynamically build table headers and forms in Nuxt.js <- In progress!
-- Utilize the toast plugin properly to return messages to users.
+- Utilize the toast plugin properly to return messages to users. <- IN PROGRESS
 - Add necessary config files to deploy back end to GCP and AWS cloud providers, front-end to Netlify.
+
+## Changes/Challenges
+
+While working through this project I try to consider all the features I would find useful as a library patron and a library staff member. When I come across something like that I tend to deviate from the proscribed approach used in the MDN tutorial. I will try to keep a record of each of these cases as much for my own benefit as for anyone else.
+
+### Book Checkout
+
+The [MDN Tutorial](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Authentication), in the section on authentication, simply suggests that you add a `ForeignKey` to the `BookInstance` model, essentially tracking the current borrower of any given copy. However I decided that I wanted to have a record of each time a library patron checked out a book. I created a [custom through model](https://docs.djangoproject.com/en/3.1/topics/db/models/#extra-fields-on-many-to-many-relationships) that would allow me to keep track of the Many-to-Many relationship between User and BookInstance. A benefit of using the custom model approach is I can add additional fields to store data. Take a look at the model definition below:
+
+```python
+class BorrowedCopies(models.Model):
+    """Defining a custom model to relate the borrowing of a book instance to a library patron"""
+    patron = models.ForeignKey(User, on_delete=models.CASCADE)
+    copy = models.ForeignKey(BookInstance, on_delete=models.CASCADE)
+    date_checked_out = models.DateTimeField(null=True, blank=True)
+    due_date = models.DateTimeField(null=True, blank=True)
+    date_returned = models.DateTimeField(null=True, blank=True)
+```
+
+I want to be able to keep a record of when each copy was checked out (date/time), due, and when it was returned. I may implement a model to store library policy data like late fees and the create a custom model annotation for tracking the fees associated with any overdue book. Although, then when the library staff adjust their fees it would appear to retroactively change the fees for past overdue books. Perhaps simply a `fine` field that would be set once the patron returns the book, based on the defined per day fee and the difference between the `due_date` and the `date_returned`.

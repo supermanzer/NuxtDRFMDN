@@ -2,7 +2,7 @@ import uuid
 from django.urls import reverse
 from django.db import models
 from myauth.models import User
-
+from datetime import date
 # Create your models here.
 
 
@@ -78,6 +78,12 @@ class BookInstance(models.Model):
 
     def __str__(self):
         return f'{self.id} ({self.book.title})'
+
+    @property
+    def overdue(self):
+        if self.due_date and date.today() > self.due_date:
+            return True
+        return False
 
 
 class Author(models.Model):

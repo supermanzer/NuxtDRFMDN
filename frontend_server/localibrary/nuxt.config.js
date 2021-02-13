@@ -48,7 +48,20 @@ export default {
   ],
 
   toast: {
-    position: "top-right"
+    position: "top-right",
+    iconPack: "mdi",
+    register: [
+      {
+        name: "login",
+        message: "Log in successful",
+        options: {
+          duration: 3000,
+          theme: "bubble",
+          icon: "check-outlilne",
+          className: "green--text"
+        }
+      }
+    ]
   },
 
   // Configuring authentication module: https://auth.nuxtjs.org/api/options
@@ -63,14 +76,16 @@ export default {
       local: {
         scheme: "refresh",
         token: {
+          prefix: "token",
           property: "access", // The name of the property in the API response that corresponds to the token value
-          maxAge: 60 * 5, // Corresponds to the lifetime of the token set in the back end
+          // maxAge: 60 * 5, // Corresponds to the lifetime of the token set in the back end
           type: "Bearer" // The Authorization header our API expects
         },
         refreshToken: {
+          prefix: "refresh",
           property: "refresh",
-          data: "refresh",
-          maxAge: 60 * 60 * 24 * 7
+          data: "refresh"
+          // maxAge: 60 * 60 * 24 * 7
         },
         user: {
           property: false

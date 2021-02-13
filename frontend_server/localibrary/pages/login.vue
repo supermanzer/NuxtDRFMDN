@@ -65,7 +65,13 @@ export default {
     login() {
       this.$auth
         .login({ data: this.user })
-        .then(() => this.$toast.success("Logged In"))
+        .then(() =>
+          this.$toast.show("Log in successful", {
+            duration: 3000,
+            icon: "check-outlilne",
+            className: "green--text text--darken-3",
+          })
+        )
         .catch((e) => {
           console.log(e);
           this.$toast.error("Login failed", {
