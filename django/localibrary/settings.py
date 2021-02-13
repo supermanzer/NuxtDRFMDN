@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -146,8 +147,23 @@ REST_FRAMEWORK = {
         'rest_framework.filters.OrderingFilter',
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
+    # USEING SIMPLE JWT AS AUTHENTICATIO MECHANISM
+    # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/getting_started.html
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication', )
 }
 
+# Simple JWT Settings
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
+SIMPLE_JWT = {
+    # How long an access token is good for
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    # how long the refresh token is good for
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    # Logging in throug the front-end will update the last_login User field
+    'UPDATE_LAST_LOGIN': True,
+    'AUTH_HEADER_TYPES': ('Bearer', ),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+}
 
 # Django CORS Headers SEttings
 # https://pypi.org/project/django-cors-headers/

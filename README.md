@@ -25,16 +25,22 @@ In case anyone stumbles across this repo and thinks it would make a fun project 
 3. Create an app for handling the REST API: `./manage.py createapp api`. This is mainly just used to namespace the API URLs so far but I like to take this approach.
 4. Create `api_views.py` and `serializers.py` in the Catalog app. I take this approach so that all logic that pertains to that app and its models are contained there. If I wind up using that app (or any other similarly design app) in another project I don't have to track down where the DRF Viewsets or Seriliazers are defined. If the new app isn't employing a REST API, these files don't hurt anything.
 5. Starting with the [MDN Django tutorial part 5](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Home_page), any work regarding building a non-admin interface will be done using the Nuxt.js front-end. This is where things start to get new and interesting (for me).
+6. Built out Vuex store methods for working with the resources exposed by the REST API
+7. Created Vuetify table component to allow server side pagination, ordering, and searching
+8. Built List and Detail pages for both Books and Authors
+9. Configured project to use @nuxt/auth on the front-end and SimpleJWT on the back-end for token authentication of users.
 
 ## Future Goals
 
 These are the areas of building a fully featured app I would like to address, beyond just a basic SPA front-end
 
-- Authentication for library patrons using Web Tokens (DRF - SimpleJWT) and `@nuxt/auth` module
+- Authentication for library patrons using Web Tokens (DRF - SimpleJWT) and `@nuxt/auth` module <- IN PROGRESS!
 - Design workflow for partons to register with the local library
 - Design a notification system based on due dates for patrons who have reserved books that are due back
 - Deploy my custom approach to using Django templates with AJAX requests using Vue and Axios
 - Implement Nuxt composition API refactoring for pages
 - Customize Nuxt.js error pages
 - Develop a less cookie-cutter style
-- Use the data returned by an OPTIONS request to dynamically build table headers and forms in Nuxt.js
+- Use the data returned by an OPTIONS request to dynamically build table headers and forms in Nuxt.js <- In progress!
+- Utilize the toast plugin properly to return messages to users.
+- Add necessary config files to deploy back end to GCP and AWS cloud providers, front-end to Netlify.

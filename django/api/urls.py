@@ -1,6 +1,9 @@
 from django.urls import include, path
 from rest_framework import routers
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from catalog import api_views
+
+from .views import UserView
 
 
 router = routers.DefaultRouter()
@@ -12,4 +15,12 @@ router.register(r'genres', api_views.GenreViewset)
 
 urlpatterns = [
     path('', include(router.urls))
+]
+
+# URL Patterns based on Simple JWT authentication and NuxtJS Auth module
+
+urlpatterns += [
+    path('token/', TokenObtainPairView.as_view(), name='obtain-token'),
+    path('token/refresh', TokenRefreshView.as_view, name='refresh-token'),
+    path('user/', UserView.as_view(), name='user-detail')
 ]

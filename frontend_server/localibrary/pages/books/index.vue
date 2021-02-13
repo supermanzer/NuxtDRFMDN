@@ -29,14 +29,21 @@
         </v-row>
       </template>
       <template v-slot:table-actions="slotProps">
-        <v-btn
-          color="primary"
-          icon
-          nuxt
-          :to="{ name: 'books-id', params: { id: slotProps.item.id } }"
-        >
-          <v-icon>mdi-details</v-icon>
-        </v-btn>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="primary"
+              icon
+              nuxt
+              v-on="on"
+              v-bind="attrs"
+              :to="{ name: 'books-id', params: { id: slotProps.item.id } }"
+            >
+              <v-icon>mdi-magnify</v-icon>
+            </v-btn>
+          </template>
+          <span>View Book Details</span>
+        </v-tooltip>
       </template>
     </ext-data-table>
   </div>

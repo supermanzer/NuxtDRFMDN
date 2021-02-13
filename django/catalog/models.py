@@ -1,6 +1,7 @@
 import uuid
 from django.urls import reverse
 from django.db import models
+from myauth.models import User
 
 # Create your models here.
 
@@ -11,6 +12,9 @@ class Genre(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+    class Meta:
+        ordering = ['name', ]
 
 
 class Book(models.Model):
@@ -68,6 +72,8 @@ class BookInstance(models.Model):
                               blank=True, default=MAINTENANCE, help_text='Book availability')
 
     class Meta:
+        verbose_name = 'Copy'
+        verbose_name_plural = 'Copies'
         ordering = ['due_date']
 
     def __str__(self):
@@ -92,3 +98,12 @@ class Author(models.Model):
 
     def display_name(self) -> str:
         return str(self)
+
+
+class BorrowedCopies(models.Model):
+    """Defining a custom model to relate the borrowing of a book instance to a library patron"""
+    patron = models.ForeignKey(User, on_delete=models.CASCADE)
+    copy = models.ForeignKey(BookInstance, on_delete=models.CASCADE)
+    date_checked_out = models.DateTimeField(null=True, blank=True)
+    due_date = models.DateTimeField(null=True, blank=True)
+    date_returned = models.DateTimeField(null=True, blank=True)
