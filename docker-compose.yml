@@ -33,8 +33,8 @@ services:
       - db
   
   # Nuxt.js front-end 
-  frontend_server:
-    build: ./frontend_server # <-- This will be a multistage build
+  nuxt:
+    build: ./nuxt # <-- This will be a multistage build
     ports: 
       - "8000:80"
 

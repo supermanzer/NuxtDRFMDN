@@ -93,7 +93,8 @@ export default {
         endpoints: {
           login: { url: "token/", method: "post" }, // Defining the route we pass username/passwords and get tokens
           refresh: { url: "token/refresh/", method: "post" },
-          user: { url: "user/", method: "get" }
+          user: { url: "user/", method: "get" },
+          logout: false
         }
       }
     },
