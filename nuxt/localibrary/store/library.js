@@ -8,7 +8,8 @@ const rootUrls = {
   authors: "authors/",
   books: "books/",
   instances: "book-instances/",
-  genres: "genres/"
+  genres: "genres/",
+  borrowed: "borrowed/"
 };
 
 // UTILITY FUNCTIONS

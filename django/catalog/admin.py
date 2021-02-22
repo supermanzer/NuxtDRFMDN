@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Author, Book, BookInstance, Genre
+from .models import Author, Book, BookInstance, BorrowedCopy, Genre
 
 
 @admin.register(Author)
@@ -23,6 +23,11 @@ class BookAdmin(admin.ModelAdmin):
     inlines = [InstanceInline, ]
 
 
+class BorrowedInline(admin.TabularInline):
+    model = BorrowedCopy
+    extra = 0
+
+
 @admin.register(BookInstance)
 class InstanceAdmin(admin.ModelAdmin):
     list_display = ('book', 'status', 'due_date', 'id')
@@ -35,11 +40,34 @@ class InstanceAdmin(admin.ModelAdmin):
             'fields': ('status', 'due_date')
         })
     )
+    inlines = [BorrowedInline, ]
 
 
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(BorrowedCopy)
+class BorrowedAdmin(admin.ModelAdmin):
+    list_display = ('copy', 'patron', 'date_checked_out',
+                    'due_date', 'late_fee')
+    fieldsets = (
+        (None, {
+            'fields': ('copy', 'patron')
+        }),
+        ('Dates', {
+            'fields': ('date_checked_out', 'due_date', 'date_returned')
+        }),
+        (None, {
+            'fields': ('late_fee', )
+        })
+    )
+
+
+class BorrowedInline(admin.TabularInline):
+    model = BorrowedCopy
+    extra = 0
 
 # admin.site.register(Author)
 # admin.site.register(Book)

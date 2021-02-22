@@ -1,10 +1,15 @@
-from .models import Genre, BookInstance, Book, Author
+from .models import BorrowedCopy, Genre, BookInstance, Book, Author
 from rest_framework import viewsets, filters
 from django_filters import rest_framework as df_filters
 from .serializers import (
-    AuthorListSerializer, BookDetailSerializer, GenreSerializer, BookListSerializer, InstanceSerializer, AuthorSerializer
+    AuthorListSerializer, BookDetailSerializer, BorrowedSerializer,
+    GenreSerializer, BookListSerializer, InstanceSerializer, AuthorSerializer
 )
 from api.viewset_mixins import ListDetailMixin
+
+from logging import getLogger
+
+logger = getLogger(__name__)
 
 
 class AuthorViewset(ListDetailMixin, viewsets.ModelViewSet):
@@ -32,3 +37,13 @@ class InstanceViewset(viewsets.ModelViewSet):
 class GenreViewset(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+
+
+class BorrowViewset(viewsets.ModelViewSet):
+    queryset = BorrowedCopy.objects.all()
+    serializer_class = BorrowedSerializer
+
+    def partial_update(self, request, *args, **kwargs):
+        logger.info(f'Calling partial update in Viewset: {args}, {kwargs}')
+        user = request.user
+        return super().partial_update(request, *args, **kwargs)

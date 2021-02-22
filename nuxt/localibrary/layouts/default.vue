@@ -41,10 +41,10 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import navListItem from "~/components/lists/navListItem.vue";
 import UserMenu from "~/components/user/userMenu.vue";
 export default {
+  name: "DefaultLayout",
   components: { navListItem, UserMenu },
   data() {
     return {

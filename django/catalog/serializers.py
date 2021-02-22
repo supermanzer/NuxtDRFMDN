@@ -1,5 +1,6 @@
+from django.db.models.fields import PositiveIntegerRelDbTypeMixin
 from rest_framework import serializers
-from .models import Author, Genre, BookInstance, Book
+from .models import Author, BorrowedCopy, Genre, BookInstance, Book
 
 
 class GenreSerializer(serializers.HyperlinkedModelSerializer):
@@ -78,3 +79,9 @@ class BookDetailSerializer(serializers.ModelSerializer):
             'image',
             'instances'
         )
+
+
+class BorrowedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BorrowedCopy
+        fields = "__all__"

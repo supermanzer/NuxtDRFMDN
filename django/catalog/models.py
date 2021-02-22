@@ -2,8 +2,12 @@ import uuid
 from django.urls import reverse
 from django.db import models
 from myauth.models import User
-from datetime import date
+from datetime import date, timedelta
 # Create your models here.
+
+from logging import getLogger
+
+logger = getLogger(__name__)
 
 
 class Genre(models.Model):
@@ -70,12 +74,14 @@ class BookInstance(models.Model):
     due_date = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=1, choices=LOAN_STATUS,  # <- 1 advantage, no need to re-define values that shoud be constant
                               blank=True, default=MAINTENANCE, help_text='Book availability')
+    # Meta options
 
     class Meta:
         verbose_name = 'Copy'
         verbose_name_plural = 'Copies'
         ordering = ['due_date']
 
+    # Model methods
     def __str__(self):
         return f'{self.id} ({self.book.title})'
 
@@ -106,10 +112,42 @@ class Author(models.Model):
         return str(self)
 
 
-class BorrowedCopies(models.Model):
+class BorrowedCopy(models.Model):
     """Defining a custom model to relate the borrowing of a book instance to a library patron"""
-    patron = models.ForeignKey(User, on_delete=models.CASCADE)
+    # Constants
+    # Length of time a book can be checked out for
+    CHECKOUT_DURATION = timedelta(days=14)
+    LATE_FEE = 0.5  # The per day fee assessed if a copy is late
+    # Fields
+    patron = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='borrowed_books')
     copy = models.ForeignKey(BookInstance, on_delete=models.CASCADE)
-    date_checked_out = models.DateTimeField(null=True, blank=True)
-    due_date = models.DateTimeField(null=True, blank=True)
-    date_returned = models.DateTimeField(null=True, blank=True)
+    date_checked_out = models.DateField(null=True, blank=True)
+    due_date = models.DateField(null=True, blank=True)
+    date_returned = models.DateField(null=True, blank=True)
+    late_fee = models.FloatField(
+        verbose_name='Late Fee', default=0.0, null=True, help_text='Late fee assessed (if any)')
+
+    # Meta options
+    class Meta:
+        ordering = ('copy', )
+        verbose_name = 'Checkout History'
+        verbose_name_plural = 'Checkout History'
+
+    # Model methods
+    def save(self, *args, **kwargs):
+        """Override default save method to set due date"""
+        logger.info(f'Calling model save method for {self}')
+        # We are going to use these records to hold reservations as well
+        # so we need to accomodate situations where date_checked_out = None
+        if self.date_checked_out and not self.due_date:
+            self.due_date = self.date_checked_out + self.CHECKOUT_DURATION
+            # This bit is redundant and I'll likely remove the due_date from
+            # the Instance model but for now, let's keep our data in sync
+            self.copy.due_date = self.due_date
+            self.copy.save()
+        if self.date_returned and self.date_returned > self.due_date:
+            # Assigning late fee if returned after due date
+            self.late_fee = (self.date_returned -
+                             self.due_date).days * self.LATE_FEE
+        super().save(*args, **kwargs)

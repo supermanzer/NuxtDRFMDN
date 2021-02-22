@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import actions from "@/resources/toasted";
 export default {
   name: "LoginPage",
   data() {
@@ -70,6 +71,7 @@ export default {
             duration: 3000,
             icon: "check-outlilne",
             className: "green--text text--darken-3",
+            action: actions.closeToast,
           })
         )
         .catch((e) => {

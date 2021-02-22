@@ -12,6 +12,7 @@ router.register(r'authors', api_views.AuthorViewset)
 router.register(r'books', api_views.BookViewset)
 router.register(r'book-instances', api_views.InstanceViewset)
 router.register(r'genres', api_views.GenreViewset)
+router.register(r'borrowed', api_views.BorrowViewset)
 
 urlpatterns = [
     path('', include(router.urls))
@@ -21,6 +22,6 @@ urlpatterns = [
 
 urlpatterns += [
     path('token/', TokenObtainPairView.as_view(), name='obtain-token'),
-    path('token/refresh', TokenRefreshView.as_view, name='refresh-token'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='refresh-token'),
     path('user/', UserView.as_view(), name='user-detail')
 ]
