@@ -145,6 +145,7 @@ class BorrowedCopy(models.Model):
             # This bit is redundant and I'll likely remove the due_date from
             # the Instance model but for now, let's keep our data in sync
             self.copy.due_date = self.due_date
+            self.copy.status = BookInstance.ON_LOAN
             self.copy.save()
         if self.date_returned and self.date_returned > self.due_date:
             # Assigning late fee if returned after due date

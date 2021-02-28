@@ -1,6 +1,8 @@
+
 from .models import BorrowedCopy, Genre, BookInstance, Book, Author
-from rest_framework import viewsets, filters
-from django_filters import rest_framework as df_filters
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from .serializers import (
     AuthorListSerializer, BookDetailSerializer, BorrowedSerializer,
     GenreSerializer, BookListSerializer, InstanceSerializer, AuthorSerializer
@@ -43,7 +45,26 @@ class BorrowViewset(viewsets.ModelViewSet):
     queryset = BorrowedCopy.objects.all()
     serializer_class = BorrowedSerializer
 
+    @action(detail=False, methods=['get'])
+    def user_books(self, request):
+        """Provide view of checked out books specific to user."""
+        data = {}
+        if request.user.is_authenticated:
+            qs = self.queryset.filter(
+                patron=request.user.id, date_returned__isnull=True)
+            data['current'] = self.get_serializer(qs, many=True).data
+            qs = self.queryset.filter(
+                patron=request.user.id, date_returned__isnull=False)
+            data['historic'] = self.get_serializer(qs, many=True).data
+        else:
+            data = {'message': 'Unauthenticated request.'}
+        return Response(data)
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        request.data.update({'patron': user.id})
+        return super().create(request, *args, **kwargs)
+
     def partial_update(self, request, *args, **kwargs):
         logger.info(f'Calling partial update in Viewset: {args}, {kwargs}')
-        user = request.user
         return super().partial_update(request, *args, **kwargs)

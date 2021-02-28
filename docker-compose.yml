@@ -12,11 +12,12 @@ services:
   db:
     image: postgres
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      # Defines parameters the Docker container will use to initialize the Postgres server
+      - POSTGRES_DB=postgres  # Create initial DB
+      - POSTGRES_USER=postgres   # Create a superuser role
+      - POSTGRES_PASSWORD=postgres  # Assign password to superuser role
     ports:
-      - "5876:5432"
+      - "5876:5432"  # Expose port for connecting to services like pgAdmin
     volumes:
       - pg-data:/var/lib/postgresql/data  # Defining an external data volume so we don't lose data when containers shut donw
 
@@ -24,7 +25,7 @@ services:
   django:
     restart: on-failure
     build: ./django
-    command: ./manage.py runserver 0.0.0.0:9000
+    command: ./manage.py runserver 0.0.0.0:9000  # Using development server, DO NOT USE FOR DEPLOYMENT
     volumes:
       - ./django:/code
     ports:

@@ -3,11 +3,19 @@
     <v-menu offset-y>
       <template v-slot:activator="{ on, attrs }">
         <v-list-item v-bind="attrs" v-on="on">
+          <v-list-item-icon>
+            <v-icon>mdi-account</v-icon>
+          </v-list-item-icon>
           <v-list-item-title>Hi {{ user.first_name }}</v-list-item-title>
         </v-list-item>
       </template>
       <v-list>
-        <v-list-item v-for="(item, index) in items" :key="index">
+        <v-list-item
+          v-for="(item, index) in items"
+          :key="index"
+          :to="item.to"
+          nuxt
+        >
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
         <v-list-item nuxt :to="{ name: 'logout' }">Log Out</v-list-item>
@@ -31,7 +39,7 @@ export default {
   }),
   data() {
     return {
-      items: [{ title: "Things" }, { title: "Stuff" }],
+      items: [{ title: "Profile", to: { name: "user" } }],
     };
   },
 };

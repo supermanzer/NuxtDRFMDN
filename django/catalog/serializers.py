@@ -11,6 +11,8 @@ class GenreSerializer(serializers.HyperlinkedModelSerializer):
 
 class InstanceSerializer(serializers.ModelSerializer):
     inst_status = serializers.CharField(source='get_status_display')
+    book = serializers.CharField(source='book.title')
+    book_id = serializers.IntegerField(source='book.id')
 
     class Meta:
         model = BookInstance
@@ -18,6 +20,7 @@ class InstanceSerializer(serializers.ModelSerializer):
             'id',
             'url',
             'book',
+            'book_id',
             'imprint',
             'status',
             'inst_status',
@@ -82,6 +85,8 @@ class BookDetailSerializer(serializers.ModelSerializer):
 
 
 class BorrowedSerializer(serializers.ModelSerializer):
+    copy = InstanceSerializer(many=False)
+
     class Meta:
         model = BorrowedCopy
         fields = "__all__"

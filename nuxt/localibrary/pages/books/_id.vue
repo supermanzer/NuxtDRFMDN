@@ -7,7 +7,7 @@
         height="4"
       ></v-progress-linear>
     </template>
-    <div v-if="loaded">
+    <template v-if="!loading">
       <v-img v-if="book.image" height="300" :src="book.image"></v-img>
       <v-card-title>{{ book.title }}</v-card-title>
       <v-card-subtitle>
@@ -42,7 +42,7 @@
           <instance-list :instances="book.instances"></instance-list>
         </div>
       </v-expand-transition>
-    </div>
+    </template>
   </v-card>
 </template>
   
@@ -56,20 +56,19 @@ export default {
   name: "BookDetail",
   data() {
     return {
-      book: {},
       loading: true,
       showInstances: false,
     };
   },
   computed: {
-    loaded() {
-      return Object.keys(this.book).length > 0;
+    book() {
+      return this.$store.state.library.detail;
     },
     num_instances() {
-      return this.loaded ? this.book.instances.length : 0;
+      return !this.loading ? this.book.instances.length : 0;
     },
     num_available() {
-      return this.loaded
+      return !this.loading
         ? this.book.instances.filter((i) => i.status === "a").length
         : 0;
     },
@@ -78,8 +77,7 @@ export default {
     const type = "books";
     const id = this.$route.params.id;
     const detailObj = { type, id };
-    // console.log(detailObj);
-    this.book = await this.$store.dispatch("library/fetchDetail", detailObj);
+    await this.$store.dispatch("library/fetchDetail", detailObj);
     this.loading = false;
   },
 };

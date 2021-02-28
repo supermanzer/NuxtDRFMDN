@@ -12,27 +12,13 @@
       <template v-slot:top>
         <slot name="table-top"></slot>
       </template>
-      <!-- Figure out a way to to this from the page using this component with slots! -->
+      <template v-slot:item.summary="{ item }">
+        {{ item.summary | truncate }}
+      </template>
       <template v-slot:item.actions="{ item }">
         <slot name="table-actions" v-bind:item="item">
           <v-icon>mdi-magnify</v-icon>
         </slot>
-        <!-- <v-btn
-          color="primary"
-          text
-          nuxt
-          :to="{ name: 'books-id', params: { id: item.id } }"
-          >{{ item.title }}</v-btn
-        > -->
-        <!-- <v-btn
-          icon
-          text
-          color="primary"
-          nuxt
-          :to="{ name: 'books-id', params: { id: item.id } }"
-        >
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn> -->
       </template>
     </v-data-table>
     <v-pagination v-model="options.page" :length="pageCount"> </v-pagination>
@@ -57,6 +43,17 @@ export default {
       page: 1,
       options: {},
     };
+  },
+  filters: {
+    truncate: function (text) {
+      if (text !== undefined) {
+        const charLength = 120; // Set number of characters to display
+        if (text.length > charLength) {
+          return text.substring(0, charLength) + "...";
+        }
+        return text;
+      }
+    },
   },
   watch: {
     options: {

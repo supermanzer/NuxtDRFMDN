@@ -72,6 +72,7 @@ export default {
   methods: {
     fetchBooks(modifiers = {}) {
       this.$store.dispatch("library/fetchData", { type: "books", modifiers });
+      this.$store.dispatch("library/fetchHeaders", { type: "books" });
     },
     refreshBooks() {
       this.fetchBooks();
@@ -85,13 +86,6 @@ export default {
         search: this.search,
       });
     },
-  },
-  mounted() {
-    // I just want to keep things fresh.  You know?
-    if (this.books instanceof Array) {
-      this.refreshBooks();
-      this.$store.dispatch("library/fetchHeaders", { type: "books" });
-    }
   },
   data() {
     return {

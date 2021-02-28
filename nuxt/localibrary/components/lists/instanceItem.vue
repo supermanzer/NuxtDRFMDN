@@ -18,7 +18,17 @@
     </v-list-item-content>
 
     <v-list-item-action>
-      <v-icon v-if="loggedIn"> mdi-book-plus </v-icon>
+      <template v-if="loggedIn">
+        <v-btn
+          color="success"
+          text
+          :disabled="available(instance)"
+          @click="checkOut"
+        >
+          Check out book
+          <v-icon> mdi-book-plus </v-icon>
+        </v-btn>
+      </template>
     </v-list-item-action>
   </v-list-item>
 </template>
@@ -32,16 +42,32 @@ export default {
   },
   computed: mapState({
     loggedIn: (state) => state.auth.loggedIn,
+    user: (state) => state.auth.user,
   }),
   methods: {
-    getClass(inst) {
+    getClass() {
       const colors = {
         a: "green--text text--darken-2",
         o: "amber--text text--darken-2",
         r: "red--text",
         m: "red--text text--darken-4",
       };
-      return colors[inst.status];
+      return colors[this.instance.status];
+    },
+    available() {
+      return this.instance.status != "a";
+    },
+    checkOut() {
+      const td = new Date();
+      const book = this.instance.book_id;
+      const payload = {
+        copy: this.instance.id,
+        date_checked_out: `${td.getFullYear()}-${
+          td.getMonth() + 1
+        }-${td.getDate()}`,
+      };
+      console.log("Checking out!");
+      this.$store.dispatch("library/checkoutCopy", { book, payload });
     },
   },
 };

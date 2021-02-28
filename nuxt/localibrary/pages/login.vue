@@ -23,6 +23,7 @@
               label="User name"
               :rules="[rules.required]"
               prepend-inner-icon="mdi-account"
+              v-on:keyup.enter="login"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="12" md="6">
@@ -32,6 +33,7 @@
               label="password"
               :rules="[rules.required]"
               prepend-inner-icon="mdi-form-textbox-password"
+              v-on:keyup.enter="login"
             ></v-text-field>
           </v-col>
         </v-row>

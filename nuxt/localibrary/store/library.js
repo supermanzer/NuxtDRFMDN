@@ -47,7 +47,8 @@ const state = () => ({
   instances: [],
   genres: [],
   available: [],
-  headers: {}
+  headers: {},
+  detail: {}
 });
 
 const mutations = {
@@ -58,6 +59,9 @@ const mutations = {
   },
   SET_HEADERS(state, payload) {
     state.headers = payload;
+  },
+  SET_DETAIL(state, payload) {
+    state.detail = payload;
   }
 };
 
@@ -111,7 +115,7 @@ const actions = {
   async fetchDetail({ commit }, { type, id }) {
     let url = `${rootUrls[type]}${id}`;
     let data = await this.$axios.$get(url);
-    return data;
+    commit("SET_DETAIL", data);
   },
 
   /**
@@ -124,6 +128,24 @@ const actions = {
     let verb = id ? "PUT" : "POST";
     let data = await this.$axios.$options(url);
     commit("SET_HEADERS", data.actions[verb]);
+  },
+
+  /**
+   * Check out an instance of a book
+   * @param {Number} book The ID for the book this copy is related to
+   * @param {Object} payload The data needed to check out a book
+   */
+  async checkoutCopy({ dispatch }, { book, payload }) {
+    let url = `${rootUrls.borrowed}`;
+    this.$axios.post(url, payload).then(() => {
+      dispatch("fetchDetail", { type: "books", id: book });
+    });
+  },
+
+  async fetchMyBooks({ commit }) {
+    let url = `${rootUrls.borrowed}user_books/`;
+    let data = await this.$axios.$get(url);
+    commit("SET_DATA", { type: "books", data });
   }
 };
 
