@@ -89,4 +89,8 @@ class BorrowedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BorrowedCopy
-        fields = "__all__"
+        fields = (
+            'id', 'patron', 'copy',
+            'date_checked_out', 'due_date',
+            'date_returned', 'late_fee'
+        )

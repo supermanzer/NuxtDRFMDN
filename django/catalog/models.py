@@ -125,8 +125,8 @@ class BorrowedCopy(models.Model):
     date_checked_out = models.DateField(null=True, blank=True)
     due_date = models.DateField(null=True, blank=True)
     date_returned = models.DateField(null=True, blank=True)
-    late_fee = models.FloatField(
-        verbose_name='Late Fee', default=0.0, null=True, help_text='Late fee assessed (if any)')
+    assessed_late_fee = models.FloatField(
+        verbose_name='Late Fee', null=True, help_text='Late fee assessed (if any)')
 
     # Meta options
     class Meta:
@@ -152,3 +152,18 @@ class BorrowedCopy(models.Model):
             self.late_fee = (self.date_returned -
                              self.due_date).days * self.LATE_FEE
         super().save(*args, **kwargs)
+
+    @property
+    def late_fee(self):
+        """Calculate and return late fee"""
+        if self.assessed_late_fee:
+            # If the book has been returned we have assessed the late fee and made it static
+            # The we just return the fee
+            return self.assessed_late_fee
+        elif self.due_date:
+            # If it hasn't been returned the late fee is dynamically calculated
+            td = date.today()
+            past_due = td - self.due_date
+            return past_due.days * self.LATE_FEE if past_due.days > 0 else 0
+        # If there's no due date it hasn't been chacked out yet (Reserved), nothing to see here
+        return None

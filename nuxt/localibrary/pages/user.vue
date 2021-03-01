@@ -2,46 +2,87 @@
   <div class="my-12 mx-auto">
     <p class="text-h1">Hi {{ user.first_name }} {{ user.last_name }}</p>
     <v-divider></v-divider>
-    <div class="light-blue lighten-4 my-6 pa-4">
-      <!-- TODO:  Add custom model annotation to sum up late fees for each user and include here -->
-      <p class="text-h4">Coming Soon</p>
-      <p>
-        Section detailing # of overdue books and total late fees owed by patron
-      </p>
-    </div>
     <template v-if="loading">
       <v-progress-linear
         indeterminate
         color="cyan darken-1"
       ></v-progress-linear>
     </template>
-    <div class="my-6" v-else>
-      <user-books :books="books.current" :headers="headers">
-        <template v-slot:title>
-          <span class="text-h4">Your current books</span>
-        </template>
-      </user-books>
-    </div>
-    <div class="my-6">
-      <user-books :books="books.historic" :headers="headers">
-        <template v-slot:title>
-          <span class="text-h4">Your previous books</span>
-        </template>
-      </user-books>
-    </div>
+    <template v-else>
+      <v-row class="my-6 pa-4">
+        <v-col cols="12" sm="12" md="6">
+          <two-lines>
+            <template v-slot:title>
+              <span class="text-h4">Your Current Books</span>
+            </template>
+            <template v-slot:subtitle>
+              You have
+              <span class="font-weight-bold">{{ books.current.length }}</span>
+              books checked out (see table below)</template
+            >
+          </two-lines>
+        </v-col>
+        <v-col cols="12" sm="12" md="6">
+          <two-lines>
+            <template v-slot:title>
+              <span class="text-h4"
+                >Late Fees: {{ total_fees | currency }}</span
+              >
+            </template>
+            <template v-slot:subtitle>
+              You currently owe {{ total_fees | currency }} in late fees to the
+              library
+            </template>
+          </two-lines>
+        </v-col>
+      </v-row>
+
+      <div class="my-6">
+        <user-books :books="books.current" :headers="headers">
+          <template v-slot:title>
+            <span class="text-h4">Your current books</span>
+          </template>
+        </user-books>
+      </div>
+      <div class="my-6">
+        <user-books :books="books.historic" :headers="headers">
+          <template v-slot:title>
+            <span class="text-h4">Your previous books</span>
+          </template>
+        </user-books>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
 import UserBooks from "~/components/user/UserBooks.vue";
+
+import TwoLines from "~/components/lists/twoLines.vue";
 export default {
-  components: { UserBooks },
+  components: { UserBooks, TwoLines },
   name: "UserProfile",
-  computed: mapState({
-    books: (state) => state.library.books,
-    user: (state) => state.auth.user,
-  }),
+  computed: {
+    ...mapState({
+      books: (state) => state.library.books,
+      user: (state) => state.auth.user,
+    }),
+    total_fees() {
+      const sum_fee = (val, book) => val + book.late_fee;
+      var fee = this.books.current.reduce(sum_fee, 0);
+      fee = this.books.historic.reduce(sum_fee, fee);
+      return fee;
+    },
+  },
+  filters: {
+    currency(val) {
+      var return_val = `$${val}`;
+      return return_val.substring(return_val.indexOf(".")) <= 2
+        ? return_val + "0"
+        : return_val;
+    },
+  },
   data() {
     return {
       loading: true,
