@@ -63,6 +63,7 @@ class BorrowViewset(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         user = request.user
         request.data.update({'patron': user.id})
+        logger.info(request.data)
         return super().create(request, *args, **kwargs)
 
     def partial_update(self, request, *args, **kwargs):

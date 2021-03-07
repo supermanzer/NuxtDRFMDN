@@ -8,7 +8,8 @@
       ></v-progress-linear>
     </template>
     <template v-if="!loading">
-      <v-img v-if="book.image" height="300" :src="book.image"></v-img>
+      <v-img v-if="book.image" height="500" :src="book.image" contain></v-img>
+      <v-divider></v-divider>
       <v-card-title>{{ book.title }}</v-card-title>
       <v-card-subtitle>
         <v-btn

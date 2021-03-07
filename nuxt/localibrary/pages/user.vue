@@ -45,7 +45,7 @@
         </user-books>
       </div>
       <div class="my-6">
-        <user-books :books="books.historic" :headers="headers">
+        <user-books :books="books.historic" :headers="historic_headers">
           <template v-slot:title>
             <span class="text-h4">Your previous books</span>
           </template>
@@ -75,21 +75,25 @@ export default {
       return fee;
     },
   },
-  filters: {
-    currency(val) {
-      var return_val = `$${val}`;
-      return return_val.substring(return_val.indexOf(".")) <= 2
-        ? return_val + "0"
-        : return_val;
-    },
-  },
+  // filters: {
+  //   currency(val) {
+  //     var return_val = `$${val}`;
+  //     var idx = return_val.indexOf(".");
+  //     if (idx < 0) {
+  //       return_val += ".00";
+  //     } else if (return_val.substring(idx).length <= 2) {
+  //       return_val += "0";
+  //     }
+  //     return return_val;
+  //   },
+  // },
   data() {
     return {
       loading: true,
       headers: [
         {
           text: "Book",
-          value: "copy.book",
+          value: "book",
           sortable: true,
           align: "start",
         },
@@ -102,6 +106,44 @@ export default {
         {
           text: "Due Date",
           value: "due_date",
+          sortable: true,
+          align: "start",
+        },
+        {
+          text: "Late Fee",
+          value: "late_fee",
+          sortable: true,
+          align: "start",
+        },
+        {
+          text: "Return",
+          value: "actions",
+          sortable: false,
+          align: "start",
+        },
+      ],
+      historic_headers: [
+        {
+          text: "Book",
+          value: "book",
+          sortable: true,
+          align: "start",
+        },
+        {
+          text: "Checked Out",
+          value: "date_checked_out",
+          sortable: true,
+          align: "start",
+        },
+        {
+          text: "Due Date",
+          value: "due_date",
+          sortable: true,
+          align: "start",
+        },
+        {
+          text: "Date Returned",
+          value: "date_returned",
           sortable: true,
           align: "start",
         },

@@ -11,7 +11,7 @@
       v-if="loaded"
       :headers="headers"
       :records="books.results"
-      :pageCount="pageCount"
+      :pageCount="books.page_count"
       @table-change="sortTable"
     >
       <template slot="table-top">
@@ -62,9 +62,6 @@ export default {
     ...mapGetters({
       headers: "library/getTableHeaders",
     }),
-    pageCount() {
-      return this.books.count / this.books.results.length;
-    },
     loaded() {
       return this.books.hasOwnProperty("results");
     },
@@ -91,6 +88,9 @@ export default {
     return {
       search: "",
     };
+  },
+  mounted() {
+    this.fetchBooks();
   },
 };
 </script>

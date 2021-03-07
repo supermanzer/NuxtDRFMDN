@@ -72,7 +72,7 @@ class BookInstance(models.Model):
         'Book', on_delete=models.RESTRICT, related_name='instances')
     imprint = models.CharField(max_length=200)
     due_date = models.DateField(null=True, blank=True)
-    status = models.CharField(max_length=1, choices=LOAN_STATUS,  # <- 1 advantage, no need to re-define values that shoud be constant
+    status = models.CharField(max_length=1, choices=LOAN_STATUS,
                               blank=True, default=MAINTENANCE, help_text='Book availability')
     # Meta options
 
@@ -149,8 +149,8 @@ class BorrowedCopy(models.Model):
             self.copy.save()
         if self.date_returned and self.date_returned > self.due_date:
             # Assigning late fee if returned after due date
-            self.late_fee = (self.date_returned -
-                             self.due_date).days * self.LATE_FEE
+            self.assessed_late_fee = (self.date_returned -
+                                      self.due_date).days * self.LATE_FEE
         super().save(*args, **kwargs)
 
     @property

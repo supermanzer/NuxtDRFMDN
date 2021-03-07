@@ -85,12 +85,12 @@ class BookDetailSerializer(serializers.ModelSerializer):
 
 
 class BorrowedSerializer(serializers.ModelSerializer):
-    copy = InstanceSerializer(many=False)
+    book = serializers.CharField(source='copy.book', read_only=True)
 
     class Meta:
         model = BorrowedCopy
         fields = (
-            'id', 'patron', 'copy',
+            'id', 'patron', 'copy', 'book',
             'date_checked_out', 'due_date',
             'date_returned', 'late_fee'
         )

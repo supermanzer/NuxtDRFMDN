@@ -26,7 +26,7 @@
       </v-toolbar>
     </template>
     <template v-slot:item.due_date="{ item }">
-      <template v-if="item.copy.overdue">
+      <template v-if="item.copy.overdue && item.date_returned == null">
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-chip color="red darken-2" dark v-bind="attrs" v-on="on">
@@ -40,12 +40,22 @@
         {{ item.due_date }}
       </template>
     </template>
+    <template v-slot:item.late_fee="{ item }">
+      {{ item.late_fee | currency }}
+    </template>
+    <template v-slot:item.actions="{ item }">
+      <return-book :id="item.id"></return-book>
+    </template>
   </v-data-table>
 </template>
 
 <script>
+import ReturnBook from "../forms/returnBook.vue";
 export default {
   name: "UserBooks",
+  components: {
+    ReturnBook,
+  },
   props: {
     books: { type: Array, required: true },
     headers: { type: Array, required: true },

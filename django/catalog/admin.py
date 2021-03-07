@@ -51,7 +51,7 @@ class GenreAdmin(admin.ModelAdmin):
 @admin.register(BorrowedCopy)
 class BorrowedAdmin(admin.ModelAdmin):
     list_display = ('copy', 'patron', 'date_checked_out',
-                    'due_date', 'late_fee')
+                    'due_date', 'date_returned', 'late_fee')
     fieldsets = (
         (None, {
             'fields': ('copy', 'patron')

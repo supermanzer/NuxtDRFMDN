@@ -92,7 +92,7 @@ checkOut() {
     },
 ```
 
-You might be wondering how this gets assigned to the correct patron. Well thanks to the JWT authentication, the Auth middleware used by Django attaches the authenticated user to any HTTP request or response. Then I can simply add this data in by overriting the `create()` method to append the user:
+You might be wondering how this gets assigned to the correct patron. Well the Auth middleware used by Django attaches the authenticated user to any HTTP request or response. Then I can simply add this data in by overriting the `create()` method to append the user:
 
 ```python
  def create(self, request, *args, **kwargs):

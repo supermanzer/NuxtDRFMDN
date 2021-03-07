@@ -137,7 +137,7 @@ STATIC_ROOT = 'static'
 # Django REST Framework Settings
 # https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.PageCountPaginator',
     'PAGE_SIZE': 5,
     "DEFAULT_RENDERDER_CLASSES": [
         'rest_framework.renderers.JSONRenderer',
@@ -202,7 +202,7 @@ LOGGING = {
         }
     },
     'loggers': {
-        'django': {
+        '*': {
             'handlers': ['console'],
             'propagate': True,
             'level': 'DEBUG'

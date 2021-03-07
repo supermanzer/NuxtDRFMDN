@@ -141,7 +141,23 @@ const actions = {
       dispatch("fetchDetail", { type: "books", id: book });
     });
   },
+  /**
+   *  Return a checked out book and update user books list
+   * @param {Number} book The id of the copy we wish to return
+   */
+  returnCopy({ dispatch }, { book }) {
+    const url = `${rootUrls.borrowed}${book}/`;
+    let today = new Date().toISOString();
+    today = today.substring(0, today.indexOf("T"));
+    const payload = { date_returned: today };
+    this.$axios.patch(url, payload).then(() => {
+      dispatch("fetchMyBooks");
+    });
+  },
 
+  /**
+   * Return lists of current and historic books checked out by authenticated user
+   */
   async fetchMyBooks({ commit }) {
     let url = `${rootUrls.borrowed}user_books/`;
     let data = await this.$axios.$get(url);
