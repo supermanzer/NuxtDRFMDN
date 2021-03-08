@@ -9,6 +9,14 @@
       ></v-progress-linear>
     </template>
     <template v-else>
+      <v-row class="mt-12">
+        <v-col cols="12" sm="12" class="d-flex justify-center center-align">
+          <v-text-field v-model="snackText" label="Snack Text"></v-text-field>
+          <v-btn color="indigo" class="white--text" @click="snackTime"
+            >Show Snack</v-btn
+          >
+        </v-col>
+      </v-row>
       <v-row class="my-6 pa-4">
         <v-col cols="12" sm="12" md="6">
           <two-lines>
@@ -75,21 +83,10 @@ export default {
       return fee;
     },
   },
-  // filters: {
-  //   currency(val) {
-  //     var return_val = `$${val}`;
-  //     var idx = return_val.indexOf(".");
-  //     if (idx < 0) {
-  //       return_val += ".00";
-  //     } else if (return_val.substring(idx).length <= 2) {
-  //       return_val += "0";
-  //     }
-  //     return return_val;
-  //   },
-  // },
   data() {
     return {
       loading: true,
+      snackText: "",
       headers: [
         {
           text: "Book",
@@ -160,6 +157,12 @@ export default {
     ...mapActions({
       getBooks: "library/fetchMyBooks",
     }),
+    snackTime() {
+      this.$store.commit("snack/SET_SNACK", {
+        text: this.snackText,
+        color: "error",
+      });
+    },
   },
   async created() {
     await this.getBooks();

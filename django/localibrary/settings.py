@@ -138,7 +138,7 @@ STATIC_ROOT = 'static'
 # https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'api.pagination.PageCountPaginator',
-    'PAGE_SIZE': 5,
+    'PAGE_SIZE': 10,
     "DEFAULT_RENDERDER_CLASSES": [
         'rest_framework.renderers.JSONRenderer',
     ],
@@ -172,50 +172,26 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    },
     'filters': {
         'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue',
-        },
+        }
     },
     'handlers': {
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler',
-            'filters': []
         }
     },
     'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        },
         '*': {
+            'level': "DEBUG",
             'handlers': ['console'],
-            'propagate': True,
-            'level': 'DEBUG'
-        },
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-        'catalog': {
-            'handlers': ['console'],
-            'propagate': True,
-            'level': 'INFO'
         }
     }
 }

@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import actions from "@/resources/toasted";
+import { mapMutations } from "vuex";
 export default {
   name: "LoginPage",
   data() {
@@ -68,22 +68,17 @@ export default {
     login() {
       this.$auth
         .login({ data: this.user })
-        .then(() =>
-          this.$toast.show("Log in successful", {
-            duration: 3000,
-            icon: "check-outlilne",
-            className: "green--text text--darken-3",
-            action: actions.closeToast,
-          })
-        )
+        .then(() => {
+          this.snackTime({ text: "Login Successful", color: "success" });
+        })
         .catch((e) => {
+          this.snackTime({ text: "Login Failed", color: "error" });
           console.log(e);
-          this.$toast.error("Login failed", {
-            duration: 1000,
-            theme: "outline",
-          });
         });
     },
+    ...mapMutations({
+      snackTime: "snack/SET_SNACK",
+    }),
   },
 };
 </script>

@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   name: "InstanceItem",
   props: {
@@ -45,6 +45,9 @@ export default {
     user: (state) => state.auth.user,
   }),
   methods: {
+    ...mapMutations({
+      snackTime: "snack/SET_SNACK",
+    }),
     getClass() {
       const colors = {
         a: "green--text text--darken-2",
@@ -57,7 +60,7 @@ export default {
     available() {
       return this.instance.status != "a";
     },
-    checkOut() {
+    async checkOut() {
       const td = new Date();
       const book = this.instance.book_id;
       const payload = {
@@ -66,8 +69,8 @@ export default {
           td.getMonth() + 1
         }-${td.getDate()}`,
       };
-      console.log("Checking out!");
-      this.$store.dispatch("library/checkoutCopy", { book, payload });
+      await this.$store.dispatch("library/checkoutCopy", { book, payload });
+      this.snackTime({ text: "Book checked out", color: "success" });
     },
   },
 };

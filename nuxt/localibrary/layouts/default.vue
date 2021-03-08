@@ -29,7 +29,8 @@
       <user-menu></user-menu>
     </v-app-bar>
     <v-main>
-      <v-container class="mx-12">
+      <snackbar />
+      <v-container class="mx-auto">
         <nuxt />
       </v-container>
     </v-main>
@@ -42,10 +43,11 @@
 
 <script>
 import navListItem from "~/components/lists/navListItem.vue";
+import Snackbar from "~/components/snackbar/Snackbar.vue";
 import UserMenu from "~/components/user/userMenu.vue";
 export default {
   name: "DefaultLayout",
-  components: { navListItem, UserMenu },
+  components: { navListItem, UserMenu, Snackbar },
   data() {
     return {
       clipped: true,

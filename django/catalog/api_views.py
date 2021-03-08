@@ -28,6 +28,12 @@ class BookViewset(ListDetailMixin, viewsets.ModelViewSet):
     search_fields = ['title']
     ordering_fields = ['title', 'author', 'genre']
 
+    def get_queryset(self):
+        qs = Book.objects.select_related(
+            'author').all().prefetch_related('genre')
+
+        return qs
+
 
 class InstanceViewset(viewsets.ModelViewSet):
     queryset = BookInstance.objects.all()

@@ -26,7 +26,7 @@
       </v-toolbar>
     </template>
     <template v-slot:item.due_date="{ item }">
-      <template v-if="item.copy.overdue && item.date_returned == null">
+      <template v-if="isOverdue(item) && item.date_returned == null">
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-chip color="red darken-2" dark v-bind="attrs" v-on="on">
@@ -71,6 +71,10 @@ export default {
     toggleSearch() {
       this.showSearch = !this.showSearch;
       this.search = "";
+    },
+    isOverdue(item) {
+      const today = new Date();
+      return Date.parse(item.due_date) < today;
     },
   },
 };
