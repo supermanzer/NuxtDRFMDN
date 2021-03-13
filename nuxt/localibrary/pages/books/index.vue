@@ -8,6 +8,7 @@
       available
     </p>
     <ext-data-table
+      ref="table"
       v-if="loaded"
       :headers="headers"
       :records="books.results"
@@ -17,14 +18,39 @@
       <template slot="table-top">
         <v-row>
           <v-col cols="12" sm="5">
-            <p class="text-h4">Search Books</p>
+            <p class="text-h4">Search/Filter Books</p>
           </v-col>
           <v-col cols="12" sm="7">
             <v-text-field
               v-model="search"
               label="Search Term"
-              @keyup="searchBooks"
+              @keyup="sortTable"
             ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" sm="11">
+            <v-toolbar dense v-if="filters">
+              <author-overflow @select="authorListen"></author-overflow>
+              <v-divider vertical class="mx-1"></v-divider>
+              <genre-select @select="genreListen"></genre-select>
+            </v-toolbar>
+          </v-col>
+          <v-col cols="12" sm="1">
+            <v-tooltip left>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="toggleFilters"
+                  elevation="2"
+                >
+                  <v-icon>mdi-tune</v-icon>
+                </v-btn>
+              </template>
+              <span>Show/Hide Filter Controls</span>
+            </v-tooltip>
           </v-col>
         </v-row>
       </template>
@@ -51,9 +77,10 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import AuthorOverflow from "~/components/buttons/AuthorOverflow.vue";
 import extDataTable from "~/components/tables/extDataTable.vue";
 export default {
-  components: { extDataTable },
+  components: { extDataTable, AuthorOverflow },
   name: "BookList",
   computed: {
     ...mapState({
@@ -74,7 +101,9 @@ export default {
     refreshBooks() {
       this.fetchBooks();
     },
-    sortTable(options) {
+    sortTable() {
+      let options = this.$refs.table.options;
+      options["search"] = this.search;
       this.fetchBooks(options);
     },
     searchBooks() {
@@ -83,10 +112,28 @@ export default {
         search: this.search,
       });
     },
+    authorListen(e) {
+      let options = this.$refs.table.options;
+      options["author"] = e.id;
+      this.fetchBooks(options);
+    },
+    genreListen(e) {
+      let options = this.$refs.table.options;
+      options["genre"] = e.id;
+      this.fetchBooks(options);
+    },
+    toggleFilters() {
+      this.filters = !this.filters;
+      if (!this.filters) {
+        ["genre", "author"].forEach((e) => delete this.$refs.table.options[e]);
+        this.fetchBooks();
+      }
+    },
   },
   data() {
     return {
       search: "",
+      filters: false,
     };
   },
   mounted() {

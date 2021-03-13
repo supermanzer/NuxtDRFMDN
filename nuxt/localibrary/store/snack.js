@@ -14,16 +14,16 @@ const state = () => ({
   text: "",
   actions: {},
   timeout: 1000,
-  color: ""
+  classnames: ""
 });
 
 const getters = {};
 
 const mutations = {
-  SET_SNACK(state, { text, color }) {
+  SET_SNACK(state, { text, classname }) {
     state.text = text;
-    if (color !== undefined) {
-      state.color = color;
+    if (classname !== undefined) {
+      state.classname = classname;
     }
   }
 };

@@ -27,6 +27,7 @@ class BookViewset(ListDetailMixin, viewsets.ModelViewSet):
     detail_serializer = BookDetailSerializer
     search_fields = ['title']
     ordering_fields = ['title', 'author', 'genre']
+    filterset_fields = ['author', 'genre']
 
     def get_queryset(self):
         qs = Book.objects.select_related(

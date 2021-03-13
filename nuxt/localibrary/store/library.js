@@ -30,8 +30,12 @@ const apiUrl = (url, modifiers) => {
  * Translate Vuetify options object into keys: values that match API requirements
  * @param {Object} modifiers The options object returned by paginated/sorted table
  */
-const apiObject = ({ sortBy, sortDesc, page }) => {
-  var result = {};
+const apiObject = ({ sortBy, sortDesc, page, ...args }) => {
+  // removing unwanted properties
+  ["groupBy", "groupDesc", "itemsPerPage", "multiSort", "mustSort"].forEach(
+    e => delete args[e]
+  );
+  var result = args;
   if (sortBy.length === 1 && sortDesc.length === 1) {
     result.ordering = sortDesc[0] ? `-${sortBy[0]}` : sortBy[0];
   }

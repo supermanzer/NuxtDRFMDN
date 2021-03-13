@@ -37,10 +37,29 @@
             ></v-text-field>
           </v-col>
         </v-row>
+        <v-row v-if="error">
+          <v-col cols="12" sm="10" offset-sm="1">
+            <v-alert
+              type="error"
+              text
+              icon="mdi-alert-circle-outline"
+              prominent
+              elevation="2"
+            >
+              <p class="headline">Login Failure</p>
+              <v-divider></v-divider>
+              <p>
+                This login attempt failed. Please check your username and
+                password. If the problem persists, give up
+              </p>
+            </v-alert>
+          </v-col>
+        </v-row>
       </v-card-text>
       <v-card-actions class="pa-12">
         <v-row>
-          <v-col justify-center cols="12" sm="12">
+          <v-col cols="12" sm="12">
+            <v-spacer></v-spacer>
             <v-btn color="primary" @click="login"> Log In </v-btn>
           </v-col>
         </v-row>
@@ -62,6 +81,7 @@ export default {
       rules: {
         required: (value) => !!value || "Required",
       },
+      error: false,
     };
   },
   methods: {
@@ -69,10 +89,14 @@ export default {
       this.$auth
         .login({ data: this.user })
         .then(() => {
-          this.snackTime({ text: "Login Successful", color: "success" });
+          this.snackTime({
+            text: "Login Successful",
+            classname: "green--text",
+          });
         })
         .catch((e) => {
-          this.snackTime({ text: "Login Failed", color: "error" });
+          this.snackTime({ text: "Login Failed", classname: "red--text" });
+          this.error = true;
           console.log(e);
         });
     },

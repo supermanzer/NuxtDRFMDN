@@ -45,12 +45,14 @@ class BookListSerializer(serializers.ModelSerializer):
 
 
 class AuthorListSerializer(serializers.ModelSerializer):
+    # display_name = serializers.CharField()
     class Meta:
         model = Author
         fields = [
             'id',
             'last_name',
             'first_name',
+            'display_name',
             'date_of_birth',
             'date_of_death'
         ]

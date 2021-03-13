@@ -9,8 +9,7 @@
     top
     app
     :timeout="timeout"
-    :color="color"
-    :text="false"
+    :class="{ true: classname }"
   >
     {{ text }}
 
@@ -46,8 +45,8 @@ export default {
     );
   },
   computed: {
-    color() {
-      return this.$store.state.snack.color;
+    classname() {
+      return this.$store.state.snack.classname;
     },
   },
 };
