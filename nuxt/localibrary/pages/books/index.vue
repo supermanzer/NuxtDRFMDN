@@ -29,11 +29,13 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12" sm="11">
-            <v-toolbar dense v-if="filters">
+          <v-col cols="12" sm="10" offset-sm="1">
+            <v-toolbar dense v-if="filters" transition="scale-transition">
               <author-overflow @select="authorListen"></author-overflow>
-              <v-divider vertical class="mx-1"></v-divider>
+              <v-divider vertical class="mx-4"></v-divider>
               <genre-select @select="genreListen"></genre-select>
+              <v-divider vertical class="mx-4"></v-divider>
+              <available-group @choice="bookFilter"></available-group>
             </v-toolbar>
           </v-col>
           <v-col cols="12" sm="1">
@@ -78,9 +80,10 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import AuthorOverflow from "~/components/buttons/AuthorOverflow.vue";
+import AvailableGroup from "~/components/buttons/AvailableGroup.vue";
 import extDataTable from "~/components/tables/extDataTable.vue";
 export default {
-  components: { extDataTable, AuthorOverflow },
+  components: { extDataTable, AuthorOverflow, AvailableGroup },
   name: "BookList",
   computed: {
     ...mapState({
@@ -120,6 +123,12 @@ export default {
     genreListen(e) {
       let options = this.$refs.table.options;
       options["genre"] = e.id;
+      this.fetchBooks(options);
+    },
+    bookFilter(e) {
+      console.log(e);
+      let options = this.$refs.table.options;
+      options["instances__status"] = e;
       this.fetchBooks(options);
     },
     toggleFilters() {

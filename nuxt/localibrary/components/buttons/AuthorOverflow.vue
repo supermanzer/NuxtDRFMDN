@@ -23,7 +23,9 @@ export default {
   computed: {
     authors() {
       if (this.$store.state.library.authors.length !== 0) {
-        return this.$store.state.library.authors.results;
+        return [{ id: null, display_name: "------" }].concat(
+          this.$store.state.library.authors.results
+        );
       }
       return [];
     },

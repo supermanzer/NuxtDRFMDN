@@ -23,7 +23,9 @@ export default {
   computed: {
     genres() {
       if (this.$store.state.library.genres.length !== 0) {
-        return this.$store.state.library.genres.results;
+        return [{ id: null, name: "-----------" }].concat(
+          this.$store.state.library.genres.results
+        );
       }
       return [];
     },

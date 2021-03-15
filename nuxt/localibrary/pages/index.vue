@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="mx-auto" max-width="1420">
+    <v-card class="mx-auto" max-width="1420" v-new>
       <v-img
         class="white--text align-end"
         height="700"

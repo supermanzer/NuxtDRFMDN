@@ -27,11 +27,11 @@ class BookViewset(ListDetailMixin, viewsets.ModelViewSet):
     detail_serializer = BookDetailSerializer
     search_fields = ['title']
     ordering_fields = ['title', 'author', 'genre']
-    filterset_fields = ['author', 'genre']
+    filterset_fields = ['author', 'genre', 'instances__status']
 
     def get_queryset(self):
         qs = Book.objects.select_related(
-            'author').all().prefetch_related('genre')
+            'author').all().prefetch_related('genre').distinct()
 
         return qs
 
