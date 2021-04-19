@@ -1,7 +1,9 @@
+from .managers import InstanceManager
 import uuid
 from django.urls import reverse
 from django.db import models
 from myauth.models import User
+
 from datetime import date, timedelta
 # Create your models here.
 
@@ -71,15 +73,15 @@ class BookInstance(models.Model):
     book = models.ForeignKey(
         'Book', on_delete=models.RESTRICT, related_name='instances')
     imprint = models.CharField(max_length=200)
-    due_date = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=1, choices=LOAN_STATUS,
                               blank=True, default=MAINTENANCE, help_text='Book availability')
+    objects = InstanceManager()
     # Meta options
 
     class Meta:
         verbose_name = 'Copy'
         verbose_name_plural = 'Copies'
-        ordering = ['due_date']
+        ordering = ['id']
 
     # Model methods
     def __str__(self):
@@ -126,7 +128,11 @@ class BorrowedCopy(models.Model):
     due_date = models.DateField(null=True, blank=True)
     date_returned = models.DateField(null=True, blank=True)
     assessed_late_fee = models.FloatField(
-        verbose_name='Late Fee', null=True, help_text='Late fee assessed (if any)')
+        verbose_name='Late Fee', null=True, blank=True, help_text='Late fee assessed (if any)')
+    late_fee_paid = models.BooleanField(
+        verbose_name='Late Fee Paid',
+        default=False
+    )
 
     # Meta options
     class Meta:
@@ -136,22 +142,24 @@ class BorrowedCopy(models.Model):
 
     # Model methods
     def save(self, *args, **kwargs):
-        """Override default save method to set due date"""
+        """Override default save method to set due date and update copy status"""
         logger.info(f'Calling model save method for {self}')
         # We are going to use these records to hold reservations as well
         # so we need to accomodate situations where date_checked_out = None
         if self.date_checked_out and not self.due_date:
             self.due_date = self.date_checked_out + self.CHECKOUT_DURATION
-            # This bit is redundant and I'll likely remove the due_date from
-            # the Instance model but for now, let's keep our data in sync
-            self.copy.due_date = self.due_date
-            self.copy.status = BookInstance.ON_LOAN
-            self.copy.save()
         if self.date_returned and self.date_returned > self.due_date:
             # Assigning late fee if returned after due date
             self.assessed_late_fee = (self.date_returned -
                                       self.due_date).days * self.LATE_FEE
         super().save(*args, **kwargs)
+
+        # We need to run the save method above to ensure the subquery is correct when this runs
+        from .annotations import status_patrons
+        BookInstance.objects.filter(pk=self.copy.id).update(
+            status=status_patrons
+        )
+       
 
     @property
     def late_fee(self):

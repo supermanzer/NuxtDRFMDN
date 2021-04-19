@@ -22,12 +22,15 @@
         <v-btn
           color="success"
           text
-          :disabled="available(instance)"
+          v-if="available(instance)"
           @click="checkOut"
         >
           Check out book
           <v-icon> mdi-book-plus </v-icon>
         </v-btn>
+        <v-btn color="warning" text v-else @click="reserve"
+          >Reserve Copy <v-icon>mdi-book-plus</v-icon></v-btn
+        >
       </template>
     </v-list-item-action>
   </v-list-item>
@@ -58,7 +61,7 @@ export default {
       return colors[this.instance.status];
     },
     available() {
-      return this.instance.status != "a";
+      return this.instance.status == "a";
     },
     async checkOut() {
       const td = new Date();
@@ -71,6 +74,12 @@ export default {
       };
       await this.$store.dispatch("library/checkoutCopy", { book, payload });
       this.snackTime({ text: "Book checked out", color: "success" });
+    },
+    async reserve() {
+      const book = this.instance.book_id;
+      const payload = { copy: this.instance.id };
+      await this.$store.dispatch("library/checkoutCopy", { book, payload });
+      this.snackTime({ text: "Book Reserved", color: "success" });
     },
   },
 };

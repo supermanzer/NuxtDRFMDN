@@ -58,11 +58,17 @@ class BorrowViewset(viewsets.ModelViewSet):
         data = {}
         if request.user.is_authenticated:
             qs = self.queryset.filter(
-                patron=request.user.id, date_returned__isnull=True)
+                patron=request.user.id, date_returned__isnull=True, 
+                date_checked_out__isnull=False)
             data['current'] = self.get_serializer(qs, many=True).data
             qs = self.queryset.filter(
                 patron=request.user.id, date_returned__isnull=False)
             data['historic'] = self.get_serializer(qs, many=True).data
+            qs = self.queryset.filter(
+                patron=request.user.id,
+                date_checked_out__isnull=True
+            )
+            data['reservations'] = self.get_serializer(qs, many=True).data
         else:
             data = {'message': 'Unauthenticated request.'}
         return Response(data)

@@ -1,5 +1,9 @@
+from logging import getLogger
 from django.contrib import admin
 from .models import Author, Book, BookInstance, BorrowedCopy, Genre
+from .admin_functions import return_to_circulation
+
+logger = getLogger(__name__)
 
 
 @admin.register(Author)
@@ -30,17 +34,24 @@ class BorrowedInline(admin.TabularInline):
 
 @admin.register(BookInstance)
 class InstanceAdmin(admin.ModelAdmin):
-    list_display = ('book', 'status', 'due_date', 'id')
-    list_filter = ('due_date', 'status',)
+    list_display = ('book', 'status', 'id')
+    list_filter = ('status',)
+    search_fields = ['id', 'book__title']
+    inlines = [BorrowedInline, ]
+    actions = [return_to_circulation, ]
     fieldsets = (
         (None, {
             'fields': ('book', 'imprint', 'id')
         }),
         ('Availability', {
-            'fields': ('status', 'due_date')
+            'fields': ('status',)
         })
     )
-    inlines = [BorrowedInline, ]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        logger.info(f'{qs.first().__dict__}')
+        return qs
 
 
 @admin.register(Genre)
@@ -48,28 +59,8 @@ class GenreAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(BorrowedCopy)
-class BorrowedAdmin(admin.ModelAdmin):
-    list_display = ('copy', 'patron', 'date_checked_out',
-                    'due_date', 'date_returned', 'late_fee')
-    fieldsets = (
-        (None, {
-            'fields': ('copy', 'patron')
-        }),
-        ('Dates', {
-            'fields': ('date_checked_out', 'due_date', 'date_returned')
-        }),
-        (None, {
-            'fields': ('late_fee', )
-        })
-    )
-
-
 class BorrowedInline(admin.TabularInline):
     model = BorrowedCopy
     extra = 0
 
-# admin.site.register(Author)
-# admin.site.register(Book)
-# admin.site.register(BookInstance)
-# admin.site.register(Genre)
+    readonly_fields = '__all__'

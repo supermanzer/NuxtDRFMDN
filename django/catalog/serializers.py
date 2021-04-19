@@ -24,7 +24,7 @@ class InstanceSerializer(serializers.ModelSerializer):
             'imprint',
             'status',
             'inst_status',
-            'due_date',
+
             'overdue',
         ]
 

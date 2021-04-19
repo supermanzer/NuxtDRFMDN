@@ -16,7 +16,7 @@
         <v-row>
           <v-col cols="12" sm="3" class="rb">
             <two-lines>
-              <template v-slot:title>Authors</template>
+              <template v-slot:title>Authors: {{num_authors}}</template>
               <template v-slot:subtitle>
                 We currently have books from
                 {{ num_authors }} authors
@@ -25,7 +25,7 @@
           </v-col>
           <v-col cols="12" sm="3" class="rb">
             <two-lines>
-              <template v-slot:title>Books</template>
+              <template v-slot:title>Books: {{num_books}}</template>
               <template v-slot:subtitle>
                 We currently have {{ num_books }} books
               </template>
@@ -33,7 +33,7 @@
           </v-col>
           <v-col cols="12" sm="3" class="rb">
             <two-lines>
-              <template v-slot:title>Copies</template>
+              <template v-slot:title>Copies: {{num_instances}}</template>
               <template v-slot:subtitle>
                 Of the {{ num_books }} books, we currently have
                 {{ num_instances }} copies
@@ -42,7 +42,7 @@
           </v-col>
           <v-col cols="12" sm="3">
             <two-lines>
-              <template v-slot:title>Genres</template>
+              <template v-slot:title>Genres: {{num_genres}}</template>
               <template v-slot:subtitle>
                 We currently have books in {{ num_genres }} Genres
               </template>
@@ -52,7 +52,7 @@
         <v-row class="pt-6 mt-6">
           <v-col cols="12" sm="4" offset-sm="4">
             <two-lines>
-              <template v-slot:title>Books Available</template>
+              <template v-slot:title>Books Available: {{num_instances_available}}</template>
               <template v-slot:subtitle>
                 There are {{ num_instances_available }} copies ready to be
                 checked out

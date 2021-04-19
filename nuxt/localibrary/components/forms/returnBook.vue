@@ -20,7 +20,7 @@
             gradient="to bottom, rgba(0,0,0, 0.2), rgba(0,0,0, 0.6)"
           >
             <v-card-title
-              >Your borrowed copy of {{ copy.copy.book }}</v-card-title
+              >Your borrowed copy of {{ copy.book }}</v-card-title
             >
           </v-img>
           <v-card-text>
