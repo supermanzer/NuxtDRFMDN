@@ -166,6 +166,16 @@ const actions = {
     let url = `${rootUrls.borrowed}user_books/`;
     let data = await this.$axios.$get(url);
     commit("SET_DATA", { type: "books", data });
+  },
+  /**
+   * Similar to fetchDetail, but returns the object to the caller
+   * @param {String} type The type of record to be fetched
+   * @param {Number} id The id for the individual record
+   * @param {String|Boolean} suffix Any suffix we need to add to the url
+   */
+  async fetchAction({commit}, {type, id, suffix = false}) {
+    let url = suffix ? `${rootUrls[type]}${id}/${suffix}` : `${rootUrls[type]}${id}`
+    return await this.$axios.$get(url)
   }
 };
 

@@ -13,24 +13,10 @@
       </v-card-title>
       <v-divider></v-divider>
       <v-card-subtitle>
-        {{ author.date_of_birth }} - {{ author.date_of_death }}
+        Born: {{ author.date_of_birth|niceDate }} - Died: {{ author.date_of_death|niceDate }}
       </v-card-subtitle>
       <v-card-text>
-        <two-lines v-for="book in author.books" :key="book.id">
-          <template slot="title">
-            <v-btn
-              color="primary"
-              text
-              nuxt
-              :to="{ name: 'books-id', params: { id: book.id } }"
-            >
-              {{ book.title }}
-            </v-btn>
-          </template>
-          <template slot="subtitle">
-            {{ book.summary }}
-          </template>
-        </two-lines>
+        <author-book-list :id="author.id"></author-book-list>
       </v-card-text>
     </template>
   </v-card>
@@ -38,9 +24,10 @@
 
 <script>
 import { mapState } from "vuex";
+import AuthorBookList from '~/components/lists/AuthorBookList.vue';
 import twoLines from "~/components/lists/twoLines.vue";
 export default {
-  components: { twoLines },
+  components: { twoLines, AuthorBookList },
   name: "AuthorDetails",
   data() {
     return {

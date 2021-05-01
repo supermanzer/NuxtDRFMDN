@@ -74,6 +74,7 @@ export default {
       };
       await this.$store.dispatch("library/checkoutCopy", { book, payload });
       this.snackTime({ text: "Book checked out", color: "success" });
+      this.$emit('check-out')
     },
     async reserve() {
       const book = this.instance.book_id;

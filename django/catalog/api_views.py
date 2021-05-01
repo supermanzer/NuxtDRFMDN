@@ -1,8 +1,12 @@
 
-from .models import BorrowedCopy, Genre, BookInstance, Book, Author
+
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
+from .models import BorrowedCopy, Genre, BookInstance, Book, Author
 from .serializers import (
     AuthorListSerializer, BookDetailSerializer, BorrowedSerializer,
     GenreSerializer, BookListSerializer, InstanceSerializer, AuthorSerializer
@@ -20,6 +24,25 @@ class AuthorViewset(ListDetailMixin, viewsets.ModelViewSet):
     list_serializer = AuthorListSerializer
     search_fields = ['last_name', 'first_name']
 
+    @method_decorator(cache_page(60*60*12))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(cache_page(60*60*12))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+    # The books by each other do not change very much so we'll cache these results for 4 hours
+    @method_decorator(cache_page(60*60*4))
+    @action(detail=True, methods=['get'])
+    def books(self, request, pk=None):
+        obj = self.get_object()
+        books = [
+            BookDetailSerializer(b).data
+            for b in obj.books.all()
+        ]
+        return Response(books)
+
 
 class BookViewset(ListDetailMixin, viewsets.ModelViewSet):
     queryset = Book.objects.all()
@@ -30,10 +53,19 @@ class BookViewset(ListDetailMixin, viewsets.ModelViewSet):
     filterset_fields = ['author', 'genre', 'instances__status']
 
     def get_queryset(self):
-        qs = Book.objects.select_related(
-            'author').all().prefetch_related('genre').distinct()
+        return Book.objects.all().prefetch_related('genre').distinct()
+        
 
-        return qs
+    @action(detail=True, methods=['get'])
+    def instances(self, request, pk=None):
+        obj = self.get_object()
+        instances = [
+            InstanceSerializer(i).data
+            for i in obj.instances.all()
+        ]
+        return Response(instances)
+
+    
 
 
 class InstanceViewset(viewsets.ModelViewSet):

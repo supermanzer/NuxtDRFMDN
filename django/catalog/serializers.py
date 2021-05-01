@@ -1,12 +1,11 @@
-from django.db.models.fields import PositiveIntegerRelDbTypeMixin
 from rest_framework import serializers
 from .models import Author, BorrowedCopy, Genre, BookInstance, Book
 
 
-class GenreSerializer(serializers.HyperlinkedModelSerializer):
+class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = ['id', 'url', 'name']
+        fields = ['id', 'name']
 
 
 class InstanceSerializer(serializers.ModelSerializer):
@@ -18,13 +17,11 @@ class InstanceSerializer(serializers.ModelSerializer):
         model = BookInstance
         fields = [
             'id',
-            'url',
             'book',
             'book_id',
             'imprint',
             'status',
             'inst_status',
-
             'overdue',
         ]
 
@@ -58,19 +55,19 @@ class AuthorListSerializer(serializers.ModelSerializer):
         ]
 
 
-class AuthorSerializer(serializers.HyperlinkedModelSerializer):
-    books = BookListSerializer(many=True, read_only=True)
+class AuthorSerializer(serializers.ModelSerializer):
+    # books = BookListSerializer(many=True, read_only=True)
 
     class Meta:
         model = Author
-        fields = ['id', 'url', 'last_name', 'first_name',
-                  'date_of_birth', 'date_of_death', 'books']
+        fields = ['id', 'last_name', 'first_name',
+                  'date_of_birth', 'date_of_death']
 
 
 class BookDetailSerializer(serializers.ModelSerializer):
     genre = serializers.CharField(source='display_genre')
-    author = AuthorSerializer(many=False, read_only=True)
-    instances = InstanceSerializer(many=True, read_only=True)
+    # author = AuthorSerializer(many=False, read_only=True)
+    # instances = InstanceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Book
@@ -82,7 +79,6 @@ class BookDetailSerializer(serializers.ModelSerializer):
             'summary',
             'isbn',
             'image',
-            'instances'
         )
 
 

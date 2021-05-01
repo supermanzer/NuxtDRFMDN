@@ -15,3 +15,17 @@ Vue.filter("currency", function(val) {
   }
   return return_val;
 });
+
+/**
+ * Returns Date().toDateString() based on
+ * ISO date strings
+ */
+Vue.filter('niceDate', function(val) {
+  if (val != null) {
+    const [y, m, d] = val.split("-").map(a => Number(a));
+    const myD = new Date(y, m - 1, d); // Month is an index in this case so starts at 0....weird
+    return myD.toDateString();
+  }
+  return ''
+  
+})
